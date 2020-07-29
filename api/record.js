@@ -1,5 +1,7 @@
 const Records = require('../models/records');
 const Results = require('../models/results');
+const DateValidator = require('../utils/date_validator');
+
 var moment = require('moment');
 
 function findRecords(client, dbName, req, res) {
@@ -8,7 +10,7 @@ function findRecords(client, dbName, req, res) {
             console.log(err);
             var ResponseToSend = new Results({
                 code: 1,
-                msg: "error",
+                msg: "server error",
                 records: []
               })
               return res.status(500).json(ResponseToSend);            
@@ -41,7 +43,7 @@ function findRecords(client, dbName, req, res) {
             console.log(err);
             var ResponseToSend = new Results({
                 code: 1,
-                msg: "error",
+                msg: "server error",
                 records: []
               })
               return res.status(500).json(ResponseToSend);
@@ -78,16 +80,10 @@ function findRecords(client, dbName, req, res) {
 // validates incoming request parameters & 
 // if a parameter is bad, returns an error.
 function validateRecordRequestParams(req) {
-    // expected date format -> YYYY-MM-DD
-    const DATE_FORMAT = "YYYY-MM-DD"
-    try {
-        moment(req.body.startDate, DATE_FORMAT, true)
-        moment(req.body.endDate, DATE_FORMAT, true)
-    } catch(err) {
-        console.log(err);
+    if (!DateValidator.isValidDate(req.body.startDate) || 
+        !DateValidator.isValidDate(req.body.endDate)) {    
         return new Error("unexpected date format in request parameters");
     }
-
     var min_count = new Number(req.body.minCount);
     var max_count = new Number(req.body.maxCount);
 
