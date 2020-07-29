@@ -5,25 +5,11 @@ require('dotenv/config');
 const MongoClient = require('mongodb').MongoClient;
 const dbName = "getir-case-study";
 const mongoose = require('mongoose');
+const Records = require('./models/Records');
+const Results = require('./models/Results');
 
 //to parse and convert request's json body
 app.use(bodyParser.json());
-
-//record object schema and compiling it's model
-const RecordSchema = mongoose.Schema({
-  key: String,
-  createdAt: Date,
-  totalCount: Number
-}, { _id: false });
-const RecordItem = mongoose.model('RecordItem', RecordSchema);
-
-///result object schema and compiling it's model
-const ResultSchema = mongoose.Schema({
-  code: Number,
-  msg: String,
-  records: [{ _id: false, key: String, createdAt: Date, totalCount: Number }]
-}, { _id: false });
-const ResponseItem = mongoose.model('ResponseItem', ResultSchema);
 
 //Post Method
 app.post('/', (req, res) => {
@@ -54,7 +40,7 @@ app.post('/', (req, res) => {
         }, 0);
         if (totalCount <= maxCount && totalCount >= minCount) {
           //add the record to array
-          var CurrentItem = new RecordItem({
+          var CurrentItem = new Records({
             key: current.key,
             createdAt: current.createdAt,
             totalCount: totalCount
@@ -64,19 +50,21 @@ app.post('/', (req, res) => {
       });//end of foreach
 
       //create response object by using schema.
-      var ResponseToSend = new ResponseItem({
+      var ResponseToSend = new Results({
         code: 0,
         msg: "Success",
         records: filteredArray
       })
-
 
       //just response for testing
       res.json(ResponseToSend);
       db.close();
     });
   });
-
 });
 
-app.listen(3000);
+const port = process.env.PORT || 3000
+
+app.listen(port,() => {
+  console.log(`Server running at port `+port);
+});
