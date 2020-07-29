@@ -17,7 +17,7 @@ router.post('/record', (req, res) => {
 });
 app.use('/v1', router);
 
-const port = process.env.PORT || 3000
+const port = process.env.PORT || 3000;
 
 app.listen(port,() => {
   console.log(`Server running at port `+port);
