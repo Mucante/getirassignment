@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
-//record object schema
+// record object schema
+// totalcount will be the sum of numbers inside counts array
 const RecordSchema = mongoose.Schema({
     key: String,
     createdAt: Date,
