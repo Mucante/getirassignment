@@ -2,8 +2,6 @@ const Records = require('../models/records');
 const Results = require('../models/results');
 const DateValidator = require('../utils/date_validator');
 
-var moment = require('moment');
-
 function findRecords(client, dbName, req, res) {
     client.connect(process.env.DB_CONNECTION, { useNewUrlParser: true, useUnifiedTopology: true }, function (err, db) {
         if (err) {
