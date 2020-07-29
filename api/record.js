@@ -81,6 +81,8 @@ function validateRecordRequestParams(req) {
     if (!DateValidator.isValidDate(req.body.startDate) || 
         !DateValidator.isValidDate(req.body.endDate)) {    
         return new Error("unexpected date format in request parameters");
+    } else if(new Date(req.body.startDate) > new Date(req.body.endDate)) {
+        return new Error("startDate should not be older than endDate");
     }
     var min_count = new Number(req.body.minCount);
     var max_count = new Number(req.body.maxCount);
@@ -94,3 +96,4 @@ function validateRecordRequestParams(req) {
 }
 
 exports.findRecords = findRecords;
+exports.validateRecordRequestParams = validateRecordRequestParams;
